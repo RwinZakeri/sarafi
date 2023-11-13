@@ -1,9 +1,11 @@
 import React from 'react';
 import upChart from '../../assets/chart-up.svg';
 import downChart from '../../assets/chart-down.svg';
-
-const TableCoins = ({coins}) => {
+import styles from "./TableCoin.module.css";
+const TableCoins = ({coins , currency , setMyChart}) => {
     console.log(coins);
+    console.log(currency);
+
     return (
         <div>
             <table>
@@ -18,23 +20,9 @@ const TableCoins = ({coins}) => {
                 </thead>
                 <tbody>
                     {
-                        coins.map((item)=> <tr key={item.id}>
-                            <td>
-                                <div>
-                                    <img src={item.image} alt={item.name} />
-                                    <span>{item.symbol.toUpperCase()}</span>
-                                </div>
-                            </td>
-                            <td>{item.name}</td>
-                            <td>${item.current_price.toLocaleString()}</td>
-                            <td>{item.price_change_percentage_24h.toFixed(2)}%</td>
-                            <td>{item.total_volume.toLocaleString()}</td>
-                            <td> <img src={
-                                
-                                item.price_change_percentage_24h > 0 ? upChart : downChart} alt={item.name} /> </td>
-                                      
-                            
-                        </tr>)
+                        coins.map((item)=> 
+                            <TableRow coin={item} setMyChart={setMyChart} currency={currency} key={item.id} />
+                        )
                     }
                 </tbody>
             </table>
@@ -43,3 +31,34 @@ const TableCoins = ({coins}) => {
 };
 
 export default TableCoins;
+
+
+
+const TableRow = ({coin , setMyChart})=> {
+    const dolar = "$";
+    const euro = "€";
+    const yen = "¥" ;
+    const showHandler = ()=> {
+        setMyChart(true)
+        console.log("object");
+    }
+    return (
+        <tr>
+            <td>
+                <div onClick={showHandler}>
+                    <img src={coin.image} alt={coin.name} />
+                    <span>{coin.symbol.toUpperCase()}</span>
+                </div>
+            </td>
+            <td>{coin.name}</td>
+        {/*  fix it later {currency == "USD" ? dolar : currency == "JPY" ? yen : currency == ""} */}
+            <td>{coin.current_price.toLocaleString()}</td>
+            <td>{coin.price_change_percentage_24h.toFixed(2)}%</td>
+            <td>{coin.total_volume.toLocaleString()}</td>
+            <td> <img src={
+
+                coin.price_change_percentage_24h > 0 ? upChart : downChart} alt={coin.name} />
+            </td>      
+        </tr>
+    )
+}
